@@ -5,5 +5,5 @@ use warnings;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 
-use MyWeb::App;
-MyWeb::App->to_app;
+use OSL::CamelloBailarin;
+OSL::CamelloBailarin->to_app;

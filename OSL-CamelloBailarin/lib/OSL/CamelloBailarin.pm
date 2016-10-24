@@ -1,4 +1,4 @@
-package MyWeb::App;
+package OSL::CamelloBailarin;
 use Dancer2;
 
 our $VERSION = '0.1';

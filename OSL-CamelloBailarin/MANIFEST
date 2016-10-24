@@ -7,7 +7,7 @@ cpanfile
 bin/app.psgi
 views/index.tt
 views/layouts/main.tt
-lib/MyWeb/App.pm
+lib/OSL/CamelloBailarin.pm
 public/favicon.ico
 public/dispatch.cgi
 public/dispatch.fcgi

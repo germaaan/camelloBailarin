@@ -86,4 +86,36 @@ post '/add' => sub {
     redirect '/';
 };
 
-true;
+any ['get', 'post'] => '/login' => sub {
+    my $err;
+
+    if ( request->method() eq "POST" ) {
+        # process form input
+        if ( params->{'username'} ne setting('username') ) {
+            $err = "Invalid username";
+        }
+        elsif ( params->{'password'} ne setting('password') ) {
+            $err = "Invalid password";
+        }
+        else {
+            session 'logged_in' => true;
+            set_flash('You are logged in.');
+            return redirect '/';
+        }
+   }
+
+   # display login form
+   template 'login.tt', {
+       'err' => $err,
+   };
+
+};
+
+get '/logout' => sub {
+   app->destroy_session;
+   set_flash('You are logged out.');
+   redirect '/';
+};
+
+init_db();
+start;

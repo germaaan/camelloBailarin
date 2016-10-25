@@ -48,6 +48,14 @@ sub init_db {
   $db->do($schema) or die $db->errstr;
 }
 
+hook before_template_render => sub {
+    my $tokens = shift;
+
+    $tokens->{'css_url'} = request->base . 'css/style.css';
+    $tokens->{'login_url'} = uri_for('/login');
+    $tokens->{'logout_url'} = uri_for('/logout');
+};
+
 get '/' => sub {
     my $db = connect_db();
     my $sql = 'select id, title, text from entries order by id desc';
@@ -63,5 +71,19 @@ get '/' => sub {
 # get '/' => sub {
 #     template 'index';
 # };
+
+post '/add' => sub {
+    if ( not session('logged_in') ) {
+        send_error("Not logged in", 401);
+    }
+
+    my $db = connect_db();
+    my $sql = 'insert into entries (title, text) values (?, ?)';
+    my $sth = $db->prepare($sql) or die $db->errstr;
+    $sth->execute(params->{'title'}, params->{'text'}) or die $sth->errstr;
+
+    set_flash('New entry posted!');
+    redirect '/';
+};
 
 true;

@@ -36,7 +36,8 @@
     <div class="reveal">
         <div class="slides">
             <section>
-                <h3>Introducción a Dancer, micro perl web framework</h3>
+                <h3>Camello Bailarín:</h3>
+                <h4>Introducción a Dancer</h4>
                 <p style="line-height: 43%">
                     <font size="4">
                         <i style="font-size: 25px;">Germán Martínez Maldonado</i>
@@ -60,9 +61,55 @@
                     <h3>¿Qué es Dancer?</h3>
                     <img alt="image" src="images/dancer-logo.png" />
                     <p class="fragment">
-                        Micro perl web framework.
+                        Es un framework web ligero libre y abierto escrito en Perl.
+                    </p>
+                    <p class="fragment">
+                        La versión 2 ha sido completamente reescrita para tener un diseño orientada a objetos completo más robusto y extensible.
                     </p>
                 </section>
+            </section>
+            <section>
+                <section>
+                    <h3>Instalación</h3>
+                    <p>
+                        <pre>
+<code data-trim contenteditable>
+  perl -MCPAN -e 'install Dancer2'
+</code>
+</pre>
+                    </p>
+                    <p>
+                        Si no tenemos CPAN.pm configurado:
+                        <pre>
+                            <code data-trim contenteditable>
+                    wget -O - http://cpanmin.us | sudo perl - Dancer2
+                  </code>
+                            </pre>
+                    </p>
+                </section>
+                <section>
+                    <h3>Creando un sitio</h3>
+                    <pre>
+  <code data-trim contenteditable>
+    dancer2 -a MyApp
+  </code>
+  </pre>
+                    <img alt="image" src="images/creacion.png" height="450" />
+                </section>
+                <section>
+                    <h3>Arrancando<h3>
+                    <pre>
+                      <code data-trim contenteditable>
+                        cd MyWeb-App && plackup -r bin/app.psgi
+                      </code>
+                      </pre>
+                      <img alt="image" src="images/arrancando.png"/>
+                </section>
+                <section>
+                  <h3>Accediendo</h3>
+                    <img alt="image" src="images/accediendo.png" />
+                </section>
+            </section>
 
             <section>
                 <h2>¿Preguntas?</h2>

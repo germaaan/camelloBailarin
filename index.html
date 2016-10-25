@@ -67,6 +67,196 @@
                         La versión 2 ha sido completamente reescrita para tener un diseño orientada a objetos completo más robusto y extensible.
                     </p>
                 </section>
+                <section>
+                  <h3>¿Qué tiene Dancer?</h3>
+                  <ul>
+                    <li class="fragment">
+                      Simplicidad y minimalismo.
+                    </li>
+                    <li class="fragment">
+                      Soporte PSGI, plugins y diseño modular: llamadas AJAX, identificador navegador, bases de datos, REST, cookies... <a href=https://metacpan.org/pod/Dancer2::Plugins/>https://metacpan.org/pod/Dancer2::Plugins</a>
+                    </li>
+                    <li class="fragment">
+                      Pocas dependencias.
+                    </li>
+                  </ul>
+                </section>
+                <section>
+                  <h3>Métodos HTTP: GET, POST, PUT, DELETE</h3>
+                  <p>
+                    Comportamiento por defecto:
+                    <pre>
+                        <code data-trim contenteditable>
+                          any '/accion' => sub {
+     # code
+}
+              </code>
+                        </pre>
+                        Comportamiento concreto:
+                        <pre>
+                            <code data-trim contenteditable>
+                              any ['get', 'post'] => '/accion' => sub {
+     # code
+};
+                  </code>
+                            </pre>
+                  </p>
+                </section>
+                <section>
+                  <h3>Declaración de rutas</h3>
+                  <p>
+                    Con paso de variables:
+                    <pre>
+                        <code data-trim contenteditable>
+get '/hola/:nombre' => sub {
+     return "Hola " . route_parameters->get('nombre');
+};
+              </code>
+                        </pre>
+                        Con paso de variables opcionales:
+                        <pre>
+                            <code data-trim contenteditable>
+get '/hola/:nombre?' => sub {
+     "Hola, " .
+          (defined param('name') ? param('name') : "seas quien seas!");
+};
+                  </code>
+                            </pre>
+                  </p>
+                </section>
+                <section>
+                  <h3>Matching de archivos</h3>
+                  <p>
+                    Nombre normal:
+                    <pre>
+                        <code data-trim contenteditable>
+get '/download/*.*' => sub {
+     my ($file, $ext) = splat;
+     # código para usar el archivo $file.$ext
+};
+              </code>
+                        </pre>
+                        Expresiones regulares:
+                        <pre>
+                            <code data-trim contenteditable>
+get qr{/hola/([\w]+)} => sub {
+     my ($nombre) = splat;
+     return "Hola $nombre";
+};
+                  </code>
+                            </pre>
+                  </p>
+                </section>
+                <section>
+                  <h3>Respuestas asíncronas</h3>
+                  Se hace mediante flujos (content), pero es necesario primero hacer un <strong>flush</strong>.
+                  <p>
+                    <pre>
+                        <code data-trim contenteditable>
+get '/status' => sub {
+     delayed {
+          response_header 'X-Foo' => 'Bar';
+
+          flush;
+
+          # manda contenido al usuario
+          content 'Hello, world!';
+
+          # se puede añadir más contenido al flujo
+          content 'Hello, again!';
+
+          # al terminar se cierra la conexión
+          done;
+     } on_error => sub {
+          my ($error) = @_;
+     };
+};
+              </code>
+                        </pre>
+                  </p>
+                </section>
+                <section>
+                  <h3>Hooks</h3>
+                  <pre>
+                      <code data-trim contenteditable>
+hook before => sub {
+     var mensaje => 'Hola';
+};
+
+get '/foo/*' => sub {
+     my ($match) = splat;
+     vars->{mensaje};
+};
+</code>
+          </pre>
+                </section>
+                <section>
+                  <h3>Plantillas</h3>
+                  <pre>
+                      <code data-trim contenteditable>
+                        set 'template'     => 'template_toolkit';
+                      </code>
+                                </pre>
+                  <pre>
+                      <code data-trim contenteditable>
+hook before_template_render => sub {
+    my $tokens = shift;
+
+    $tokens->{'css_url'} = request->base . 'css/style.css';
+    $tokens->{'login_url'} = uri_for('/login');
+    $tokens->{'logout_url'} = uri_for('/logout');
+};
+                      </code>
+                                </pre>
+                </section>
+                <section>
+                  <h3>Sesiones</h3>
+                  <pre>
+                      <code data-trim contenteditable>
+                        set 'session'      => 'Simple';
+                      </code>
+                                </pre>
+                                <pre>
+                                    <code data-trim contenteditable>
+                                <div class=metanav>
+[% IF not session.logged_in %]
+  <a href="[% login_url %]">Acceder</a>
+[% ELSE %]
+  <a href="[% logout_url %]">Salir</a>
+[% END %]
+</div>
+</code>
+          </pre>
+                </section>
+                <section>
+                  <h3>Bases de datos</h3>
+                  <pre>
+                      <code data-trim contenteditable>
+use DBI;
+                      </code>
+                                </pre>
+                                <pre>
+                                    <code data-trim contenteditable>
+                                      set 'database' => File::Spec->catfile(File::Spec->tmpdir(), 'dancr.db');
+                                    </code>
+                                              </pre>
+                                              <pre>
+                                                  <code data-trim contenteditable>
+sub connect_db {
+     my $dbh = DBI->connect("dbi:SQLite:dbname=".setting('database')) or
+         die $DBI::errstr;
+
+     return $dbh;
+}
+
+sub init_db {
+     my $db = connect_db();
+     my $schema = read_text('./schema.sql');
+     $db->do($schema) or die $db->errstr;
+}
+                                                  </code>
+                                                            </pre>
+                </section>
             </section>
             <section>
                 <section>

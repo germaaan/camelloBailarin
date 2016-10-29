@@ -5,7 +5,7 @@ use File::Spec;
 use File::Slurper qw/ read_text /;
 use Template;
 
-set 'database'     => File::Spec->catfile(File::Spec->tmpdir(), 'dancr.db');
+set 'database'     => 'dancr.db';
 set 'session'      => 'Simple';
 set 'template'     => 'template_toolkit';
 set 'logger'       => 'console';
